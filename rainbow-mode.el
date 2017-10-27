@@ -1163,7 +1163,7 @@ Return a value between 0 and 1."
      ,@rainbow-r-colors-font-lock-keywords
      ,@rainbow-html-colors-font-lock-keywords
      ,@rainbow-html-rgb-colors-font-lock-keywords))
-  (ov-clear (point-min) (point-max) 'ovrainbow t))
+  (ov-clear 'ovrainbow))
 
 ;;;###autoload
 (define-minor-mode rainbow-mode
