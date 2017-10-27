@@ -35,6 +35,7 @@
 (require 'regexp-opt)
 (require 'faces)
 (require 'color)
+(require 'ov)
 
 (unless (require 'xterm-color nil t)
   (require 'ansi-color))
@@ -997,11 +998,14 @@ will be enabled if a major mode has been detected from the
 background is COLOR. The foreground is computed using
 `rainbow-color-luminance', and is either white or black."
   (let ((match (or match 0)))
-    (put-text-property
+    (ov-clear (match-beginning match) (match-end match) 'ovrainbow t)
+    (ov
      (match-beginning match) (match-end match)
      'face `((:foreground ,(if (> 0.5 (rainbow-x-color-luminance color))
                                "white" "black"))
-             (:background ,color)))))
+             (:background ,color))
+     'ovrainbow t
+     'priority 5000)))
 
 (defun rainbow-colorize-itself (&optional match)
   "Colorize a match with itself."
@@ -1158,7 +1162,8 @@ Return a value between 0 and 1."
      ,@rainbow-latex-rgb-colors-font-lock-keywords
      ,@rainbow-r-colors-font-lock-keywords
      ,@rainbow-html-colors-font-lock-keywords
-     ,@rainbow-html-rgb-colors-font-lock-keywords)))
+     ,@rainbow-html-rgb-colors-font-lock-keywords))
+  (ov-clear (point-min) (point-max) 'ovrainbow t))
 
 ;;;###autoload
 (define-minor-mode rainbow-mode
