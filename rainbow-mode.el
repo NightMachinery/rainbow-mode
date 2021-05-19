@@ -1,5 +1,6 @@
 ;;; rainbow-mode.el --- Colorize color names in buffers
-
+;; @bug turning this mode on will make hl-line's overlay persist on the current line forever
+;;;
 ;; Copyright (C) 2010-2020 Free Software Foundation, Inc
 
 ;; Author: Julien Danjou <julien@danjou.info>
