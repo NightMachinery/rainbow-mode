@@ -1026,13 +1026,6 @@ will be enabled if a major mode has been detected from the
 background is COLOR. The foreground is computed using
 `rainbow-color-luminance', and is either white or black."
   (let ((match (or match 0)))
-<<<<<<< HEAD
-    (put-text-property
-     (match-beginning match) (match-end match)
-     'face `((:foreground ,(if (> 0.5 (rainbow-x-color-luminance color))
-                               "white" "black"))
-             (:background ,color)))))
-=======
     (ov-clear (match-beginning match) (match-end match) 'ovrainbow t)
     (ov
      (match-beginning match) (match-end match)
@@ -1041,7 +1034,6 @@ background is COLOR. The foreground is computed using
              (:background ,color))
      'ovrainbow t
      'priority 5000)))
->>>>>>> f/master
 
 (defun rainbow-colorize-itself (&optional match)
   "Colorize a match with itself."
