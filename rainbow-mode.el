@@ -30,9 +30,13 @@
 ;;; Code:
 
 (require 'cl-lib)
+(eval-when-compile
+  (require 'cl))
+
 (require 'regexp-opt)
 (require 'faces)
 (require 'color)
+(require 'ov)
 
 (unless (require 'xterm-color nil t)
   (require 'ansi-color))
@@ -42,12 +46,11 @@
   :tag "Rainbow"
   :group 'help)
 
-;;; Hexadecimal colors
-
+;; Hexadecimal colors
 (defvar rainbow-hexadecimal-colors-font-lock-keywords
-  '(("[^&]\\(#\\(?:[0-9a-fA-F]\\{3\\}\\)\\{1,4\\}\\)"
+  '(("[^&]\\(#\\(?:[0-9a-fA-F]\\{3\\}\\)+\\{1,4\\}\\)"
      (1 (rainbow-colorize-itself 1)))
-    ("^\\(#\\(?:[0-9a-fA-F]\\{3\\}\\)\\{1,4\\}\\)"
+    ("^\\(#\\(?:[0-9a-fA-F]\\{3\\}\\)+\\{1,4\\}\\)"
      (0 (rainbow-colorize-itself)))
     ("[Rr][Gg][Bb]:[0-9a-fA-F]\\{1,4\\}/[0-9a-fA-F]\\{1,4\\}/[0-9a-fA-F]\\{1,4\\}"
      (0 (rainbow-colorize-itself)))
@@ -296,7 +299,7 @@ If set to t, the LaTeX colors will be enabled. If set to nil, the
 LaTeX colors will not be enabled.  If set to auto, the LaTeX colors
 will be enabled if a major mode has been detected from the
 `rainbow-latex-colors-major-mode-list'."
-  :type '(choice (symbol :tag "enable in certain modes" auto)
+ :type '(choice (symbol :tag "enable in certain modes" auto)
                  (symbol :tag "enable globally" t)
                  (symbol :tag "disable" nil))
   :group 'rainbow)
@@ -1023,11 +1026,22 @@ will be enabled if a major mode has been detected from the
 background is COLOR. The foreground is computed using
 `rainbow-color-luminance', and is either white or black."
   (let ((match (or match 0)))
+<<<<<<< HEAD
     (put-text-property
      (match-beginning match) (match-end match)
      'face `((:foreground ,(if (> 0.5 (rainbow-x-color-luminance color))
                                "white" "black"))
              (:background ,color)))))
+=======
+    (ov-clear (match-beginning match) (match-end match) 'ovrainbow t)
+    (ov
+     (match-beginning match) (match-end match)
+     'face `((:foreground ,(if (> 0.5 (rainbow-x-color-luminance color))
+                               "white" "black"))
+             (:background ,color))
+     'ovrainbow t
+     'priority 5000)))
+>>>>>>> f/master
 
 (defun rainbow-colorize-itself (&optional match)
   "Colorize a match with itself."
@@ -1186,7 +1200,8 @@ Return a value between 0 and 1."
      ,@rainbow-latex-rgb-colors-font-lock-keywords
      ,@rainbow-r-colors-font-lock-keywords
      ,@rainbow-html-colors-font-lock-keywords
-     ,@rainbow-html-rgb-colors-font-lock-keywords)))
+     ,@rainbow-html-rgb-colors-font-lock-keywords))
+  (ov-clear 'ovrainbow))
 
 (defvar rainbow-keywords-hook nil
   "Hook used to add additional font-lock keywords.
