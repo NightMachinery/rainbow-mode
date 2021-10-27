@@ -1,5 +1,7 @@
 ;;; rainbow-mode.el --- Colorize color names in buffers
-;; @bug turning this mode on will make hl-line's overlay persist on the current line forever
+;; * @solved/bug Turning this mode on will make hl-line's overlay persist on the current line forever. This also happens when I use `ov' for org-highlighter, so either `ov' or `hl-line' itself are buggy.
+;; ** This bug seems to be caused by `ov-clear'
+;; *** It was caused by the wrong order of args that were given to `ov-clear'. Probably the code I copied it from was too old.
 ;;;
 ;; Copyright (C) 2010-2020 Free Software Foundation, Inc
 
@@ -1027,7 +1029,7 @@ will be enabled if a major mode has been detected from the
 background is COLOR. The foreground is computed using
 `rainbow-color-luminance', and is either white or black."
   (let ((match (or match 0)))
-    (ov-clear (match-beginning match) (match-end match) 'ovrainbow t)
+    (ov-clear 'ovrainbow t (match-beginning match) (match-end match))
     (ov
      (match-beginning match) (match-end match)
      'face `((:foreground ,(if (> 0.5 (rainbow-x-color-luminance color))
